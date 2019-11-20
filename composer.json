@@ -1,0 +1,40 @@
+{
+    "name": "miw_upm/miw_results",
+    "license": "MIT",
+    "type": "project",
+    "description": "MiW Results",
+    "homepage": "http://miw.etsisi.upm.es",
+    "keywords": ["doctrine", "psr7"],
+    "authors": [
+        {
+            "name": "MiW UPM",
+            "homepage": "http://miw.etsisi.upm.es/",
+            "email": "miw@etsisi.upm.es",
+            "role": "Developer"
+        }
+        ],
+    "autoload": {
+        "psr-4": {
+            "MiW\\Results\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "MiW\\Results\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+		"php": ">=7.3",
+        "ext-mysqli": "*",
+        "ext-json": "*",
+        "doctrine/orm": "^2.6",
+        "vlucas/phpdotenv": "^3.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.4",
+        "roave/security-advisories": "dev-master"
+    },
+    "config": {
+        "bin-dir": "bin"
+    }
+}
