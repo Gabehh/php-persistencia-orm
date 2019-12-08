@@ -19,33 +19,32 @@ Utils::loadEnv(__DIR__ . '/../');
 
 $entityManager = Utils::getEntityManager();
 
-if ($argc < 3 || $argc > 4) {
+if ($argc !=2) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <USERNAME> <EMAIL> <PASSWORD>
-
+    Usage: $fich <USERID>
 MARCA_FIN;
     exit(0);
 }
 
-$username  = (string) $argv[1];
-$email  = (string) $argv[2];
-$password  = (string) $argv[3];
-$enabled = $argv[4] ?? true;
+$userId = (int) $argv[1];
+$user = $entityManager
+    ->getRepository(User::class)
+    ->findOneBy(['id' => $userId]);
 
-$user = new User();
-$user->setUsername($username);
-$user->setEmail($email);
-$user->setPassword($password);
-$user->setEnabled($enabled);
-$user->setIsAdmin(false);
+if (null === $user) {
+    echo "User with ID #$userId not found" . PHP_EOL;
+    exit(0);
+}
 
 try {
-    $entityManager->persist($user);
+    $entityManager->remove($user);
     $entityManager->flush();
-    echo 'Created User with ID #' . $user->getId() . PHP_EOL;
+    echo "User ". $user->getUsername() ." has been deleted" . PHP_EOL;
 } catch (Exception $exception) {
     echo $exception->getMessage() . PHP_EOL;
 }
+
+
 

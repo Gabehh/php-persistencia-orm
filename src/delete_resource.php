@@ -9,7 +9,7 @@
  * @link     http://www.etsisi.upm.es/ ETS de Ingeniería de Sistemas Informáticos
  */
 
-use MiW\Results\Entity\User;
+use MiW\Results\Entity\Result;
 use MiW\Results\Utils;
 
 require __DIR__ . '/../vendor/autoload.php';
@@ -19,32 +19,29 @@ Utils::loadEnv(__DIR__ . '/../');
 
 $entityManager = Utils::getEntityManager();
 
-if ($argc < 3 || $argc > 4) {
+if ($argc !=2) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <USERNAME> <EMAIL> <PASSWORD>
-
+    Usage: $fich <RESULTID>
 MARCA_FIN;
     exit(0);
 }
 
-$username  = (string) $argv[1];
-$email  = (string) $argv[2];
-$password  = (string) $argv[3];
-$enabled = $argv[4] ?? true;
+$resultId = (int) $argv[1];
+$result = $entityManager
+    ->getRepository(Result::class)
+    ->findOneBy(['id' => $resultId]);
 
-$user = new User();
-$user->setUsername($username);
-$user->setEmail($email);
-$user->setPassword($password);
-$user->setEnabled($enabled);
-$user->setIsAdmin(false);
+if (null === $result) {
+    echo "Result with ID #$resultId not found" . PHP_EOL;
+    exit(0);
+}
 
 try {
-    $entityManager->persist($user);
+    $entityManager->remove($result);
     $entityManager->flush();
-    echo 'Created User with ID #' . $user->getId() . PHP_EOL;
+    echo "Result with ID #$resultId has been deleted" . PHP_EOL;
 } catch (Exception $exception) {
     echo $exception->getMessage() . PHP_EOL;
 }
