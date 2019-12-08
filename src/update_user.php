@@ -19,16 +19,22 @@ Utils::loadEnv(__DIR__ . '/../');
 
 $entityManager = Utils::getEntityManager();
 
-if ($argc <2 || $argc>3) {
+if ($argc!=6) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <USERID>
+    Usage: $fich <USERID> <USERNAME> <EMAIL> <PASSWORD> [<ENABLED>]
+
 MARCA_FIN;
     exit(0);
 }
 
-$userId = (int) $argv[1];
+$userId = (string) $argv[1];
+$username  = (string) $argv[2];
+$email  = (string) $argv[3];
+$password  = (string) $argv[4];
+$enabled = (boolean)$argv[5];
+
 $user = $entityManager
     ->getRepository(User::class)
     ->findOneBy(['id' => $userId]);
@@ -38,7 +44,13 @@ if (null === $user) {
     exit(0);
 }
 
-if($argc===2){
+try {
+    $user->setUsername($username);
+    $user->setEmail($email);
+    $user->setPassword($password);
+    $user->setEnabled($enabled);
+    $entityManager->flush();
+    echo PHP_EOL.'Updated User:'. PHP_EOL;
     echo PHP_EOL . sprintf(
             '  %2s: %20s %30s %7s' . PHP_EOL,
             'Id', 'Username:', 'Email:', 'Enabled:'
@@ -51,6 +63,7 @@ if($argc===2){
         ($user->isEnabled()) ? 'true' : 'false'
     ),
     PHP_EOL;
-} else if (in_array('--json', $argv, true)) {
-    echo json_encode($user, JSON_PRETTY_PRINT);
+} catch (Exception $exception) {
+    echo $exception->getMessage() . PHP_EOL;
 }
+

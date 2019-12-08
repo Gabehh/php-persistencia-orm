@@ -11,6 +11,7 @@
 
 namespace MiW\Results\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -108,6 +109,40 @@ class Result implements \JsonSerializable
     public function getId(): int
     {
         return $this->id;
+    }
+
+    /**
+     * @set int
+     * @param int $result
+     * @return Result
+     */
+    public function setResult(int $result): Result
+    {
+        $this->result = $result;
+        return $this;
+    }
+
+    /**
+     * @set User
+     * @param User $user
+     * @return Result
+     */
+    public function setUser(User $user): Result
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+
+    /**
+     * @set int
+     * @param DateTime $time
+     * @return Result
+     */
+    public function setTimestamp(DateTime $time): Result
+    {
+        $this->time = $time;
+        return $this;
     }
 
     /**
