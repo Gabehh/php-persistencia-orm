@@ -40,15 +40,18 @@ if (null === $user) {
 
 if($argc===2){
     echo PHP_EOL . sprintf(
-            '  %2s: %20s %30s %7s' . PHP_EOL,
-            'Id', 'Username:', 'Email:', 'Enabled:'
+            '  %2s: %20s %30s %7s %7s %7s %25s' . PHP_EOL,
+            'Id', 'Username:', 'Email:', 'Enabled:', 'Admin:', "Token:", "Last Login:"
         );
     echo sprintf(
-        '- %2d: %20s %30s %7s',
+        '- %2d: %20s %30s %7s %7s %7s %28s',
         $user->getId(),
         $user->getUsername(),
         $user->getEmail(),
-        ($user->isEnabled()) ? 'true' : 'false'
+        ($user->isEnabled()) ? 'true' : 'false',
+        ($user->isAdmin()) ? 'true' : 'false',
+        $user->getToken(),
+        $user->getLastLogin()
     ),
     PHP_EOL;
 } else if (in_array('--json', $argv, true)) {

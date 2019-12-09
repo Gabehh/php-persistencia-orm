@@ -1,0 +1,4 @@
+ruta_raíz:
+  path:     /
+  controller: 'funcionHomePage'
+  methods:   [ GET ]

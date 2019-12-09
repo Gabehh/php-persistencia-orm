@@ -19,11 +19,11 @@ Utils::loadEnv(__DIR__ . '/../');
 
 $entityManager = Utils::getEntityManager();
 
-if ($argc < 3 || $argc > 4) {
+if ($argc <7 || $argc>8) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <USERNAME> <EMAIL> <PASSWORD>
+    Usage: $fich <USERNAME> <EMAIL> <ENABLED> <PASSWORD> <TOKEN> <ISADMIN>
 
 MARCA_FIN;
     exit(0);
@@ -31,20 +31,45 @@ MARCA_FIN;
 
 $username  = (string) $argv[1];
 $email  = (string) $argv[2];
-$password  = (string) $argv[3];
-$enabled = $argv[4] ?? true;
+$enabled = (boolean) $argv[3];
+$password  = (string) $argv[4];
+$token  = (string) $argv[5];
+$isAdmin = (boolean) $argv[6];
+
 
 $user = new User();
 $user->setUsername($username);
 $user->setEmail($email);
 $user->setPassword($password);
 $user->setEnabled($enabled);
-$user->setIsAdmin(false);
+$user->setToken($token);
+$user->setLastLogin(new DateTime('now'));
+$user->setIsAdmin($isAdmin);
 
 try {
     $entityManager->persist($user);
     $entityManager->flush();
-    echo 'Created User with ID #' . $user->getId() . PHP_EOL;
+    if($argc===7){
+        echo PHP_EOL . sprintf(
+                '  %2s: %20s %30s %7s %7s %7s %25s' . PHP_EOL,
+                'Id', 'Username:', 'Email:', 'Enabled:', 'Admin:', "Token:", "Last Login:"
+            );
+        echo sprintf(
+            '- %2d: %20s %30s %7s %7s %7s %28s',
+            $user->getId(),
+            $user->getUsername(),
+            $user->getEmail(),
+            ($user->isEnabled()) ? 'true' : 'false',
+            ($user->isAdmin()) ? 'true' : 'false',
+            $user->getToken(),
+            $user->getLastLogin()
+        ),
+        PHP_EOL;
+    } else if (in_array('--json', $argv, true)) {
+        echo PHP_EOL.'User Created'. PHP_EOL;
+        echo json_encode($user, JSON_PRETTY_PRINT);
+    }
+
 } catch (Exception $exception) {
     echo $exception->getMessage() . PHP_EOL;
 }

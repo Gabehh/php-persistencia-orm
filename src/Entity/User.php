@@ -11,6 +11,7 @@
 
 namespace MiW\Results\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -118,12 +119,43 @@ class User implements \JsonSerializable
      */
     private $password;
 
+
+    /**
+     * Token
+     *
+     * @var string
+     *
+     * @ORM\Column(
+     *     name     = "token",
+     *     type     = "string",
+     *     length   = 40,
+     *     nullable = false
+     *     )
+     */
+    private $token;
+
+
+    /**
+     * Last_login
+     *
+     * @var DateTime
+     *
+     * @ORM\Column(
+     *     name     = "last_login",
+     *     type     = "datetime",
+     *     nullable = false
+     *     )
+     */
+    private $last_login;
+
     /**
      * User constructor.
      *
      * @param string $username username
      * @param string $email    email
      * @param string $password password
+     * @param string $token token
+     * @param \DateTime $last_login last_login
      * @param bool   $enabled  enabled
      * @param bool   $isAdmin  isAdmin
      */
@@ -131,12 +163,16 @@ class User implements \JsonSerializable
         string $username = '',
         string $email = '',
         string $password = '',
+        string $token = '',
+        \DateTime $last_login = null,
         bool   $enabled = false,
         bool   $isAdmin = false
     ) {
         $this->id       = 0;
         $this->username = $username;
         $this->email    = $email;
+        $this->token = $token;
+        $this->last_login = $last_login;
         $this->setPassword($password);
         $this->enabled  = $enabled;
         $this->isAdmin  = $isAdmin;
@@ -174,6 +210,23 @@ class User implements \JsonSerializable
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+
+    /**
+     * @return string
+     */
+    public function getLastLogin(): string
+    {
+        return $this->last_login->format('Y-m-d H:i:s');
     }
 
     /**
@@ -235,6 +288,29 @@ class User implements \JsonSerializable
         return $this;
     }
 
+
+    /**
+     * @param string $token
+     * @return User
+     */
+    public function setToken(string $token): User
+    {
+        $this->token = $token;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $last_login
+     * @return User
+     */
+    public function setLastLogin(string $last_login): User
+    {
+        $format = 'Y-m-d';
+        $date = DateTime::createFromFormat($format, $last_login);
+        $this->last_login = $date;
+        return $this;
+    }
+
     /**
      * Verifies that the given hash matches the user password.
      *
@@ -269,7 +345,9 @@ class User implements \JsonSerializable
             'username'      => utf8_encode($this->username),
             'email'         => utf8_encode($this->email),
             'enabled'       => $this->enabled,
-            'admin'         => $this->isAdmin
+            'admin'         => $this->isAdmin,
+            'token'         => $this->token,
+            "last_login"    => $this->last_login
         );
     }
 }

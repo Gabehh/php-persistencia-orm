@@ -19,21 +19,23 @@ Utils::loadEnv(__DIR__ . '/../');
 
 $entityManager = Utils::getEntityManager();
 
-if ($argc!=6) {
+if ($argc <9 || $argc>10) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <USERID> <USERNAME> <EMAIL> <PASSWORD> [<ENABLED>]
-
+    Usage: $fich <USERID><USERNAME> <EMAIL> <ENABLED> <PASSWORD> <TOKEN> <ISADMIN> <LASTLOGIN>
 MARCA_FIN;
     exit(0);
 }
 
-$userId = (string) $argv[1];
+$userId  = (string) $argv[1];
 $username  = (string) $argv[2];
 $email  = (string) $argv[3];
-$password  = (string) $argv[4];
-$enabled = (boolean)$argv[5];
+$enabled = (boolean) $argv[4];
+$password  = (string) $argv[5];
+$token  = (string) $argv[6];
+$isAdmin = (boolean) $argv[7];
+$date = $argv[8];
 
 $user = $entityManager
     ->getRepository(User::class)
@@ -49,20 +51,30 @@ try {
     $user->setEmail($email);
     $user->setPassword($password);
     $user->setEnabled($enabled);
+    $user->setToken($token);
+    $user->setIsAdmin($isAdmin);
+    $user->setLastLogin($date);
     $entityManager->flush();
-    echo PHP_EOL.'Updated User:'. PHP_EOL;
-    echo PHP_EOL . sprintf(
-            '  %2s: %20s %30s %7s' . PHP_EOL,
-            'Id', 'Username:', 'Email:', 'Enabled:'
-        );
-    echo sprintf(
-        '- %2d: %20s %30s %7s',
-        $user->getId(),
-        $user->getUsername(),
-        $user->getEmail(),
-        ($user->isEnabled()) ? 'true' : 'false'
-    ),
-    PHP_EOL;
+    if($argc===9){
+        echo PHP_EOL . sprintf(
+                '  %2s: %20s %30s %7s %7s %7s %25s' . PHP_EOL,
+                'Id', 'Username:', 'Email:', 'Enabled:', 'Admin:', "Token:", "Last Login:"
+            );
+        echo sprintf(
+            '- %2d: %20s %30s %7s %7s %7s %28s',
+            $user->getId(),
+            $user->getUsername(),
+            $user->getEmail(),
+            ($user->isEnabled()) ? 'true' : 'false',
+            ($user->isAdmin()) ? 'true' : 'false',
+            $user->getToken(),
+            $user->getLastLogin()
+        ),
+        PHP_EOL;
+    } else if (in_array('--json', $argv, true)) {
+        echo PHP_EOL.'User Created'. PHP_EOL;
+        echo json_encode($user, JSON_PRETTY_PRINT);
+    }
 } catch (Exception $exception) {
     echo $exception->getMessage() . PHP_EOL;
 }
