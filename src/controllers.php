@@ -1,17 +1,24 @@
 <?php
 
+use MiW\Results\Entity\User;
+use MiW\Results\Utils;
 
 function funcionHomePage()
 {
-    global $routes;
-
-    $rutaListado = $routes->get('ruta_list')->getPath();
-
-    $url = substr($rutaListado, 0, strrpos($rutaListado, '/'));
     echo <<< ____MARCA_FIN
-    <ul>
-        <li><a href="$url">Listado</a></li>
-    </ul>
-____MARCA_FIN;
+        <h1>hola</h1>
+    ____MARCA_FIN;
 
+}
+
+
+function ListUsers(?string $json = null)
+{
+    $entityManager = Utils::getEntityManager();
+    $users = $entityManager
+        ->getRepository(User::class)
+        ->findAll();
+    echo ($json)
+        ? json_encode($users, JSON_PRETTY_PRINT)
+        : var_dump($users);
 }

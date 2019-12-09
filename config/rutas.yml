@@ -2,3 +2,11 @@ ruta_raíz:
   path:     /
   controller: 'funcionHomePage'
   methods:   [ GET ]
+
+ruta_user_list:
+  path:     /user/list/{json}
+  controller: 'ListUsers'
+  defaults:
+    json: null
+  methods:
+    - GET
