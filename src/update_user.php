@@ -35,7 +35,8 @@ $enabled = (boolean) $argv[4];
 $password  = (string) $argv[5];
 $token  = (string) $argv[6];
 $isAdmin = (boolean) $argv[7];
-$date = $argv[8];
+$format = 'Y-m-d';
+$date = DateTime::createFromFormat($format, (string)$argv[8]);
 
 $user = $entityManager
     ->getRepository(User::class)

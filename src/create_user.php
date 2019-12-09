@@ -43,7 +43,7 @@ $user->setEmail($email);
 $user->setPassword($password);
 $user->setEnabled($enabled);
 $user->setToken($token);
-$user->setLastLoginDate(new DateTime('now'));
+$user->setLastLogin(new DateTime('now'));
 $user->setIsAdmin($isAdmin);
 
 try {
