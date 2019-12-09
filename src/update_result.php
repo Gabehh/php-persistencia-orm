@@ -20,11 +20,11 @@ Utils::loadEnv(__DIR__ . '/../');
 
 $entityManager = Utils::getEntityManager();
 
-if ($argc < 4 || $argc > 5) {
+if ($argc < 5 || $argc > 6) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <ResultId> <Result> <UserId> [<Timestamp>]
+    Usage: $fich <ResultId> <Result> <UserId> <Timestamp>
 
 MARCA_FIN;
     exit(0);
@@ -33,7 +33,8 @@ MARCA_FIN;
 $resultId = (int) $argv[1];
 $newResult = (int) $argv[2];
 $userId  = (int) $argv[3];
-$newTimestamp = $argv[4] ?? new DateTime('now');
+$date = DateTime::createFromFormat('Y-m-d', (string)$argv[4]);
+$newTimestamp = $date;
 
 $result = $entityManager
     ->getRepository(Result::class)
@@ -59,10 +60,15 @@ try {
     $result->setTimestamp($newTimestamp);
     $entityManager->flush();
     echo PHP_EOL.'Updated Result:'. PHP_EOL;
-    echo PHP_EOL . sprintf(
-            '%3s - %3s - %22s - %s',
-            'Id', 'res', 'username', 'time') . PHP_EOL;
-    echo $result . PHP_EOL;
+    if($argc === 5){
+        echo PHP_EOL . sprintf(
+                '%3s - %3s - %22s - %s',
+                'Id', 'res', 'username', 'time') . PHP_EOL;
+        echo $result . PHP_EOL;
+    }
+    else if (in_array('--json', $argv, true)) {
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
 } catch (Exception $exception) {
     echo $exception->getMessage() . PHP_EOL;
 }

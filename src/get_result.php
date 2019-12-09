@@ -38,7 +38,6 @@ if (null === $result) {
     exit(0);
 }
 
-
 if($argc === 2){
     echo PHP_EOL . sprintf(
             '%3s - %3s - %22s - %s',

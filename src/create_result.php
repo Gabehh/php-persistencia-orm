@@ -24,7 +24,7 @@ if ($argc < 3 || $argc > 4) {
     $fich = basename(__FILE__);
     echo <<< MARCA_FIN
 
-    Usage: $fich <Result> <UserId> [<Timestamp>]
+    Usage: $fich <Result> <UserId>
 
 MARCA_FIN;
     exit(0);
@@ -32,7 +32,7 @@ MARCA_FIN;
 
 $newResult    = (int) $argv[1];
 $userId       = (int) $argv[2];
-$newTimestamp = $argv[3] ?? new DateTime('now');
+$newTimestamp = new DateTime('now');
 
 /** @var User $user */
 $user = $entityManager
@@ -47,8 +47,19 @@ $result = new Result($newResult, $user, $newTimestamp);
 try {
     $entityManager->persist($result);
     $entityManager->flush();
-    echo 'Created Result with ID ' . $result->getId()
-        . ' USER ' . $user->getUsername() . PHP_EOL;
+    echo PHP_EOL.'Result Created'.PHP_EOL;
+    if($argc === 3){
+        echo PHP_EOL . sprintf(
+                '%3s - %3s - %22s - %s',
+                'Id', 'res', 'username', 'time') . PHP_EOL;
+        echo $result . PHP_EOL;
+    }
+    else if (in_array('--json', $argv, true)) {
+        echo json_encode($result, JSON_PRETTY_PRINT);
+    }
 } catch (Exception $exception) {
     echo $exception->getMessage();
 }
+
+
+

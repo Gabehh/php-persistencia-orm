@@ -300,7 +300,7 @@ class User implements \JsonSerializable
     }
 
     /**
-     * @param DateTime $last_login
+     * @param string $last_login
      * @return User
      */
     public function setLastLogin(string $last_login): User
@@ -308,6 +308,16 @@ class User implements \JsonSerializable
         $format = 'Y-m-d';
         $date = DateTime::createFromFormat($format, $last_login);
         $this->last_login = $date;
+        return $this;
+    }
+
+    /**
+     * @param DateTime $last_login
+     * @return User
+     */
+    public function setLastLoginDate(DateTime $last_login): User
+    {
+        $this->last_login = $last_login;
         return $this;
     }
 

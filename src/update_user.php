@@ -55,6 +55,7 @@ try {
     $user->setIsAdmin($isAdmin);
     $user->setLastLogin($date);
     $entityManager->flush();
+    echo PHP_EOL.'User Updated'. PHP_EOL;
     if($argc===9){
         echo PHP_EOL . sprintf(
                 '  %2s: %20s %30s %7s %7s %7s %25s' . PHP_EOL,
@@ -72,7 +73,6 @@ try {
         ),
         PHP_EOL;
     } else if (in_array('--json', $argv, true)) {
-        echo PHP_EOL.'User Created'. PHP_EOL;
         echo json_encode($user, JSON_PRETTY_PRINT);
     }
 } catch (Exception $exception) {

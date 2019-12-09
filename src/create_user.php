@@ -43,12 +43,13 @@ $user->setEmail($email);
 $user->setPassword($password);
 $user->setEnabled($enabled);
 $user->setToken($token);
-$user->setLastLogin(new DateTime('now'));
+$user->setLastLoginDate(new DateTime('now'));
 $user->setIsAdmin($isAdmin);
 
 try {
     $entityManager->persist($user);
     $entityManager->flush();
+    echo PHP_EOL.'User Created'. PHP_EOL;
     if($argc===7){
         echo PHP_EOL . sprintf(
                 '  %2s: %20s %30s %7s %7s %7s %25s' . PHP_EOL,
@@ -66,7 +67,6 @@ try {
         ),
         PHP_EOL;
     } else if (in_array('--json', $argv, true)) {
-        echo PHP_EOL.'User Created'. PHP_EOL;
         echo json_encode($user, JSON_PRETTY_PRINT);
     }
 
