@@ -33,7 +33,6 @@ try {
     $action = $parameters['_controller'];
     $param1 = $parameters['json'] ?? null;
     $action($param1);
-
 } catch (ResourceNotFoundException $e) {
     echo 'Caught exception: The resource could not be found' . PHP_EOL;
 } catch (MethodNotAllowedException $e) {
