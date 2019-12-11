@@ -120,6 +120,26 @@ class Result implements \JsonSerializable
         return $this->user;
     }
 
+
+    /**
+     * @return int
+     */
+    public function getResult(): int
+    {
+        return $this->result;
+    }
+
+
+
+
+    /**
+     * @return DateTime
+     */
+    public function getTimestamp(): DateTime
+    {
+        return $this->time;
+    }
+
     /**
      * @set int
      * @param int $result

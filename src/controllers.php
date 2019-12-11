@@ -15,6 +15,7 @@ function funcionHomePage()
     $routListResult = $routes->get('ruta_result_list')->getPath();
     $rutaNewResult = $routes->get('ruta_new_result')->getPath();
     $rutaDeleteResult = $routes->get('ruta_delete_result')->getPath();
+    $rutaEditResult = $routes->get('ruta_edit_result')->getPath();
     echo <<< ____MARCA_FIN
     <h1>Users</h1>
     <ul>
@@ -27,6 +28,7 @@ function funcionHomePage()
     <ul>
         <li><a href="$routListResult">Listado Results</a></li>
         <li><a href='$rutaNewResult'>Crear Result</a></li>
+        <li><a href='$rutaEditResult'>Editar Result</a></li>
         <li><a href='$rutaDeleteResult'>Delete Result</a></li>
     </ul>
 ____MARCA_FIN;
@@ -177,6 +179,55 @@ function EditUser(){
 
 }
 
+
+function EditResult(){
+    global $routes, $context;
+    if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+        $rutaEditResult = $routes->get('ruta_edit_result')->getPath();
+        echo <<< ___MARCA_FIN
+        <form method="POST" action="$rutaEditResult">
+            ID RESULT: <input type="text" name="resultId"><br>
+            <input type="submit" value="Enviar"> 
+        </form>
+    ___MARCA_FIN;
+
+    } elseif ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        try {
+            $idResult = $_POST['resultId'];
+            $rout = $routes->get('ruta_result_edited')->getPath();
+            $entityManager = Utils::getEntityManager();
+            $result = $entityManager
+                ->getRepository(Result::class)
+                ->findOneBy(['id' => $idResult]);
+            if (null === $result) {
+                echo "Result with ID #$idResult not found" . PHP_EOL;
+                echo "<br/>";
+                echo "<a href='$rout'>Home</a>";
+                exit(0);
+            }
+            $id = $result->getId();
+            $_result = $result->getResult();
+            $user = $result->getUser()->getId();
+            $time = $result->getTimestamp()->format('Y-d-m');
+
+            echo <<< ___MARCA_FIN
+            <form method="POST" action="$rout">
+                <input type="text" name="id" value="$id" style="display: none"><br>
+                Result: <input type="text" name="result" value=$_result><br>
+                User: <input type="text" name="user" value=$user><br>
+                Time: <input type="date" name="time" value="$time"><br>
+                <input type="submit" value="Enviar"> 
+            </form>
+        ___MARCA_FIN;
+        }
+        catch (Exception $exception)
+        {
+            echo $exception->getMessage() . PHP_EOL;
+        }
+    }
+
+}
+
 function UserEdited(){
     if ($_SERVER['REQUEST_METHOD'] === 'POST'){
         global $routes;
@@ -209,6 +260,37 @@ function UserEdited(){
         }
     }
 }
+
+function ResultEdited(){
+    if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+        global $routes;
+        try {
+            $entityManager = Utils::getEntityManager();
+            $id = $_POST['id'];
+            $editResult = $entityManager
+                ->getRepository(Result::class)
+                ->findOneBy(['id' => $id]);
+            $result = $_POST['result'];
+            $userId = $_POST['user'];
+            $time = $_POST['time'];
+            $user = $entityManager
+                ->getRepository(User::class)
+                ->findOneBy(['id' => $userId]);
+            $editResult->setResult($result);
+            $editResult->setTimestamp(new DateTime($time));
+            $editResult->setUser($user);
+            $entityManager->flush();
+            echo 'Result Edited' . PHP_EOL;
+            echo '<pre>' . json_encode($editResult, JSON_PRETTY_PRINT) . '</pre>';
+            $routListResult = $routes->get('ruta_result_list')->getPath();
+            echo "<a href='$routListResult'>Listado Result</a>";
+        }
+        catch (Exception $exception){
+            echo $exception->getMessage() . PHP_EOL;
+        }
+    }
+}
+
 
 function NewUser()
 {

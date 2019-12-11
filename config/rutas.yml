@@ -46,6 +46,16 @@ ruta_edit_user:
 ruta_user_edited:
   path:       /user/edited
   controller: 'UserEdited'
-  methods:   [GET,POST]
+  methods: [ GET, POST ]
+
+ruta_edit_result:
+  path:       /result/edit
+  controller: 'EditResult'
+  methods:   [ GET, POST ]
+
+ruta_result_edited:
+  path:       /result/edited
+  controller: 'ResultEdited'
+  methods: [ GET, POST ]
 
 
