@@ -150,7 +150,7 @@ function EditUser(){
             if (null === $user) {
                 echo "User with ID #$idUser not found" . PHP_EOL;
                 echo "<br/>";
-                echo "<a href='$rout'>Home</a>";
+                echo "<a href='/'>Home</a>";
                 exit(0);
             }
             $id = $user->getId();
@@ -199,26 +199,45 @@ function EditResult(){
             $result = $entityManager
                 ->getRepository(Result::class)
                 ->findOneBy(['id' => $idResult]);
+            $users = $entityManager
+                ->getRepository(User::class)
+                ->findAll();
             if (null === $result) {
                 echo "Result with ID #$idResult not found" . PHP_EOL;
                 echo "<br/>";
-                echo "<a href='$rout'>Home</a>";
+                echo "<a href='/'>Home</a>";
                 exit(0);
             }
             $id = $result->getId();
             $_result = $result->getResult();
-            $user = $result->getUser()->getId();
+            $userId = $result->getUser()->getId();
             $time = $result->getTimestamp()->format('Y-d-m');
 
             echo <<< ___MARCA_FIN
             <form method="POST" action="$rout">
                 <input type="text" name="id" value="$id" style="display: none"><br>
                 Result: <input type="text" name="result" value=$_result><br>
-                User: <input type="text" name="user" value=$user><br>
+                User:             
+                <select name="user">
+            ___MARCA_FIN;
+            foreach ($users as $clave => $valor) {
+                $id =$valor->getId();
+                $user = $valor->getUsername();
+                if($userId==$id) {
+                    echo "<option value=$id selected='selected' >$user</option>";
+                }
+                else{
+                    echo "<option value=$id>$user</option>";
+                }
+            }
+
+            echo <<< ___MARCA_FIN
+                </select><br>
+               
                 Time: <input type="date" name="time" value="$time"><br>
                 <input type="submit" value="Enviar"> 
             </form>
-        ___MARCA_FIN;
+            ___MARCA_FIN;
         }
         catch (Exception $exception)
         {
@@ -239,8 +258,7 @@ function UserEdited(){
                 ->findOneBy(['id' => $id]);
             $username = $_POST['username'];
             $email = $_POST['email'];
-            $isAdmin = $_POST['admin'] ?? 0
-            ;
+            $isAdmin = $_POST['admin'] ?? 0;
             $token = $_POST['token'];
             $enabled = $_POST['enable'] ?? 0;
             $user->setUsername($username);
