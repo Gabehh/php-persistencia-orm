@@ -62,8 +62,10 @@ class UserTest extends TestCase
      */
     public function testGetSetUsername(): void
     {
-        self::markTestIncomplete(
-            'This test has not been implemented yet.'
+        $this->user->setUsername("prueba");
+        self::assertEquals(
+            "prueba",
+            $this->user->getUsername()
         );
     }
 

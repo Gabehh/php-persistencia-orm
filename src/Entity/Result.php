@@ -111,6 +111,15 @@ class Result implements \JsonSerializable
         return $this->id;
     }
 
+
+    /**
+     * @return User
+     */
+    public function getUser(): User
+    {
+        return $this->user;
+    }
+
     /**
      * @set int
      * @param int $result

@@ -11,14 +11,31 @@ ruta_user_list:
   methods:
     - GET
 
+ruta_result_list:
+  path:     /result/list/
+  controller: 'ListResults'
+  defaults:
+    json: null
+  methods:
+    - GET
 ruta_new_user:
   path:       /user/new
   controller: 'NewUser'
   methods:   [ GET, POST ]
 
+ruta_new_result:
+  path:       /result/new
+  controller: 'NewResult'
+  methods:   [ GET, POST ]
+
 ruta_delete_user:
   path:       /user/delete
   controller: 'DeleteUser'
+  methods:   [ GET, POST ]
+
+ruta_delete_result:
+  path:       /result/delete
+  controller: 'DeleteResult'
   methods:   [ GET, POST ]
 
 ruta_edit_user:
