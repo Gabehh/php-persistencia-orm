@@ -13,7 +13,7 @@
 
         <!-- ###+ ResultsDoctrine -->
         <env name="DATABASE_HOST" value="127.0.0.1"/>
-        <env name="DATABASE_NAME" value="miw_results_tests"/>
+        <env name="DATABASE_NAME" value="orm_doctrine"/>
         <env name="DATABASE_PORT" value="3306"/>
         <env name="DATABASE_USER" value="root"/>      <!-- CHANGE!!! -->
         <env name="DATABASE_PASSWD" value=""/>  <!-- CHANGE!!! -->
@@ -25,7 +25,7 @@
         <env name="ADMIN_USER_EMAIL" value="admin-miw@example.com"/>
         <env name="ADMIN_USER_PASSWD" value="685615119"/>          <!-- CHANGE!!! -->
 
-        <env name="ENTITY_DIR" value="/src/Entity/"/>
+        <env name="ENTITY_DIR" value="./src/Entity/"/>
         <!-- muestra consulta SQL por la salida estándar-->
         <env name="DEBUG" value="0"/>
         <!-- ###- ResultsDoctrine -->
